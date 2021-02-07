@@ -1,2 +1,2 @@
 # AlgorithmStudy
-### SSAFY 5th class10 Algorithm Study
+### SSAFY 5th class10 Algorithm Study🤓💻
