@@ -26,7 +26,7 @@ public class BOJ1074 {
 		// 종료 조건) 가로 세로 사이즈 2가 되면 getOrder함수 불러서 결과 얻고 종료
 		if (size == 2) {
 			getOrder(x, y);
-			System.out.println(order-1);
+			System.out.println(order);
 			return;
 		} 
 		
@@ -67,8 +67,7 @@ public class BOJ1074 {
 		
 		for (int i = 0; i < 4; i++) {			// Z자 모양으로 반복하면서
 			if (x + dx[i] == r && y + dy[i] == c) {		// 찾으려는 칸 나오면
-				++order;
-				return order;				// 순서 하나 증가해주고 종료
+				return order;				// 종료
 			}
 			++order;			// 찾으려는 칸 아니면 그냥 순서만 증가
 		}
