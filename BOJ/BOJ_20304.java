@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.StringTokenizer;
 
+// 비밀번호 제작
+// 420ms
 public class BOJ_20304 {
 
 	public static void main(String[] args) throws Exception {
