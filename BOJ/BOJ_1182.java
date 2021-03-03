@@ -24,7 +24,6 @@ public class BOJ_1182 {
 			limit = i;
 			combination(0, 0, 0);
 		}
-		//subSet(0, 0, 0, 0);
 		System.out.println(answer);
 	}
 
@@ -36,8 +35,7 @@ public class BOJ_1182 {
 			}
 			return;
 		}
-		
-		for (int i = start; i < N; i++) {
+		for (int i = 0; i < arr.length; i++) {
 			combination(cnt+1, i+1, sum+arr[i]);
 		}
 	}
