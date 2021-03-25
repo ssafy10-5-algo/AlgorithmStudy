@@ -6,72 +6,90 @@ import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
+// 104ms
 public class BOJ_1194_달이차오른다가자 {
 
-	private static int N, M, answer = Integer.MAX_VALUE;
+	private static int N, M;
 	private static char[][] map;
-	private static Queue<int[]> queue;
+	private static Queue<Point> queue;
 	static List<Character> keys = new ArrayList<Character>();
+	static boolean[][][] visited;
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
+		N = Integer.parseInt(st.nextToken());		// 세로
+		M = Integer.parseInt(st.nextToken());		// 가로
 		
-		queue = new LinkedList<>();
+		queue = new LinkedList<>();				// bfs에 이용할 큐
+		visited = new boolean[N][M][1<<6];		// 어떤 키를 가지고 방문했는지 체크할 배열
 		
 		map = new char[N][M];
 		for (int i = 0; i < N; i++) {
 			map[i] = br.readLine().toCharArray();
 			for (int j = 0; j < M; j++) {
 				if (map[i][j] == '0') {				// 민식이가 있는 곳이면
-					queue.add(new int[] {i, j});	// 큐에 저장해놓고
-					map[i][j] = '.';				// 빈곳으로 바꾸어주기
+					visited[i][j][0] = true;
+					queue.add(new Point(i, j, 0));	// 큐에 저장
 				}
 			}
 		}
 		
-		answer = bfs() ? answer : -1;
-		System.out.println(answer);
+		bfs();
 	}
 
 	static int[] dx = {-1, 1, 0, 0};
 	static int[] dy = {0, 0, -1, 1};
-	static int cnt = 0;
-	private static boolean bfs() {
+	private static void bfs() {
+		int cnt = 0;
 		while (!queue.isEmpty()) {
-			cnt++;
-			int x = queue.peek()[0];
-			int y = queue.poll()[1];
-			
-			for (int i = 0; i < 4; i++) {
-				int nx = x + dx[i], ny = y + dy[i];
-				if (nx < 0 || nx >= N || ny < 0 || ny >= M) continue; 	// 범위 체크
+			// 현재 큐에 있는 요소 다 비우면 그게 움직임 한번
+			for (int s = 0, size=queue.size(); s < size; s++) {
+				Point current = queue.poll();
+				int x = current.x;
+				int y = current.y;
+				int key = current.key;
 				
-				if (map[nx][ny] == '#') continue; 		// 벽이면 무시
-				else if (map[nx][ny] == '.') {
-					queue.add(new int[] {nx, ny}); 		// 빈곳이면 큐에 저장
+				if (map[x][y] == '1') {		// 탈출
+					System.out.println(cnt);
+					return;
 				}
-				else if (map[nx][ny] >= 'a' && map[nx][ny] <= 'z') {	// 열쇠이면 열쇠 주워서 리스트에 저장
-					keys.add(map[nx][ny]);
-					queue.add(new int[] {nx, ny});
-				}
-				else if (map[nx][ny] >= 'A' && map[nx][ny] <= 'Z') {
-					// 문에 해당하는 키를 주운적 있으면 지나다닐 수 있으므로 빈칸으로 만들어줌
-					if (keys.contains((char)(map[nx][ny] + 32))) {
-						map[nx][ny] = '.';
-						queue.add(new int[] {nx, ny});
+				
+				for (int i = 0; i < 4; i++) {
+					int nx = x + dx[i], ny = y + dy[i];
+					int copy = key;
+					
+					if (nx < 0 || nx >= N || ny < 0 || ny >= M || visited[nx][ny][copy]) continue; 	// 범위, 방문 체크
+					
+					if (map[nx][ny] == '#') continue; 		// 벽이면 무시
+					
+					else if (map[nx][ny] >= 'a' && map[nx][ny] <= 'z') {	// 열쇠
+						copy |= (1 << map[nx][ny] - 'a');
 					}
-					else continue;		// 키 주운적 없으면 못지나감
-				}
-				else if (map[nx][ny] == '1') {
-					answer = Math.min(answer, cnt);
-					return true;
+					
+					else if (map[nx][ny] >= 'A' && map[nx][ny] <= 'Z')		// 문
+						if ((copy & (1 << map[nx][ny] - 'A')) == 0) continue;
+					
+					visited[nx][ny][copy] = true;			// 방문체크하고
+					queue.add(new Point(nx, ny, copy));		// 다음 방문 후보이므로 큐에 넣어줌
 				}
 			}
+			cnt++;
+				
 		}
-		return false;
+		System.out.println(-1);
 	}
 
+}
+
+class Point {
+	int x, y, key;
+
+	public Point(int x, int y, int key) {
+		this.x = x;
+		this.y = y;
+		this.key = key;
+	}
+	
+	
 }
