@@ -3,48 +3,34 @@ import java.io.InputStreamReader;
 
 public class BOJ_5557_1학년 {
 
-	private static int N, targetNum, answer = 0;
-	private static int[] arr;
-	private static int total;
-
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		N = Integer.parseInt(br.readLine());
-		arr = new int[N];
-		total = 0;
-		
+		int N = Integer.parseInt(br.readLine());
+		int[] arr = new int[N];
+		long[][] dp = new long[N][21];
 		
 		String input = br.readLine();
 		for (int i = 0, idx=0; i < arr.length; i++) {
 			arr[i] = input.charAt(idx) - '0';
 			idx += 2;
-			
-			if (i == N-1) continue;
-			total += arr[i];
 		}
-		targetNum = total - (total - arr[N-1]) / 2;
 		
-		visited = new boolean[N];
-		subset(0, 0, 0, 0);
-		System.out.println(answer);
-	}
-
-	static boolean[] visited;
-	private static void subset(int idx, int start, int addNums, int subNums) {
-		if (addNums+subNums < 0 || addNums+subNums > 20) 
-			return;
+		dp[0][arr[0]] = 1;
 		
-		if (idx == N-1) {
-			if (addNums == targetNum) {
-				answer++;
-				return;
+		for (int i = 1; i < N-1; i++) {
+			for (int j = 0; j <= 20; j++) {
+				if (dp[i-1][j] == 0) continue;
+				
+				if (j - arr[i] >= 0)
+					dp[i][j-arr[i]] += dp[i-1][j];
+				
+				if(j+arr[i] <= 20)
+					dp[i][j+arr[i]] += dp[i-1][j];
 			}
 		}
 		
-		for (int i = start; i < N-1; i++) {
-			subset(idx+1, i+1, addNums+arr[i], subNums);		// 더하기
-			subset(idx+1, i+1, addNums, subNums-arr[i]);			// 빼기
-		}
+		System.out.println(dp[N-2][arr[N-1]]);
 	}
+
 }
