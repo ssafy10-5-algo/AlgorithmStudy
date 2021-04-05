@@ -38,7 +38,7 @@ public class BOJ_15685_드래곤커브 {
 
 	private static void check() {
 		for (int i = 0; i < SIZE-1; i++) {
-			for (int j = 0; j < SIZE; j++) {
+			for (int j = 0; j < SIZE-1; j++) {
 				if (visited[i][j] && visited[i][j+1] && visited[i+1][j] && visited[i+1][j+1]) cnt++;
 			}
 		}
@@ -46,7 +46,7 @@ public class BOJ_15685_드래곤커브 {
 
 	private static void drawCurveMap(int x, int y) {
 		int nx = x, ny = y;
-		int size=  list.size();
+		int size = list.size();
 		
 		visited[x][y] = true;
 		
@@ -62,8 +62,8 @@ public class BOJ_15685_드래곤커브 {
 		for (int i = 0; i < curve; i++) {
 			int size = list.size();
 			
-			for (int j = 0; j <= size; j++) {
-				list.add((list.get(size-i) + 1) % 4);
+			for (int j = 1; j <= size; j++) {
+				list.add((list.get(size-j) + 1) % 4);
 			}
 		}
 	}
